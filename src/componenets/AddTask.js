@@ -31,6 +31,7 @@ import { useState } from "react";
                 type='date' 
                 placeholder='Add Day & time' 
                 value={day} 
+                min={new Date().toISOString().split('T')[0]}
                 onChange={(e)=>setDay(e.target.value)} />
             </div>
             <div className='form-control form-control-check'>

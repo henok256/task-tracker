@@ -1,22 +1,22 @@
 {
   "tasks": [
     {
-      "text": "playing soccer",
-      "day": "2022-07-05",
+      "text": "going to school",
+      "day": "2022-07-28",
+      "reminder": true,
+      "id": 1
+    },
+    {
+      "text": "playing golf",
+      "day": "2022-07-28",
       "reminder": true,
       "id": 2
     },
     {
-      "text": "going santagio bernba",
-      "day": "2022-07-15",
+      "text": "playing soccer",
+      "day": "2022-07-29",
       "reminder": true,
       "id": 3
-    },
-    {
-      "text": "going to golf club",
-      "day": "2022-08-12",
-      "reminder": true,
-      "id": 4
     }
   ]
 }
