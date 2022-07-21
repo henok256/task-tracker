@@ -2,8 +2,9 @@ import {useState, useEffect} from 'react';
 import  Header  from "./componenets/Header";
 import  Tasks  from "./componenets/Tasks";
 import AddTask  from "./componenets/AddTask";
-
-
+import Footer from './componenets/Footer';
+import About from './componenets/About';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 const App=()=> {
 
@@ -24,13 +25,23 @@ const App=()=> {
     const data = await res.json();
     return data;
   }
+    //fetch task
+  const fetchTask = async(id)=>{
+    const res = await fetch(`http://localhost:5000/tasks/${id}`);
+    const data = await res.json();
+    return data;
+    
+  }
 
   //add task 
   const addTask = async(task)=>{
-    const res = await fetch('http://localhost:5000/tasks', {method:'POST', headers:{
+    const res = await fetch('http://localhost:5000/tasks', {
+      method:'POST',
+       headers:{
       'Content-type':'application/json'
     },
-  body:JSON.stringify(task)})
+  body:JSON.stringify(task),
+})
 
   const data = await res.json();
   setTasks([...tasks, data])
@@ -47,19 +58,59 @@ const App=()=> {
   }
 
   // toggle reminder
-  const togglereminder =(id)=>{
-    setTasks(tasks.map((task)=> task.id===id? {...task, reminder:!task.reminder}:task))
+  const togglereminder =async (id)=>{
+    const taskToToggle = await fetchTask(id);
+    const updateTask ={...taskToToggle, reminder: !taskToToggle.reminder}
+    
+    const res = await fetch(`http://localhost:5000/tasks/${id}`,{
+      method:'PUT',
+      headers:{
+        'Content-type':'application/json'
+      },
+      body:JSON.stringify(updateTask)
+    })
+
+    const data = await res.json();
+    
+
+    setTasks(
+      tasks.map((task)=>
+       task.id===id ? {...task, reminder:
+        data.reminder}:task
+        )
+        )
 
   }
   return (
+    <Router>
+      
+      
     <div className="container">
       <Header onAdd={()=>setShowAddTask(!showAddTask)} showAdd={showAddTask}/>
     
-    {showAddTask && <AddTask onAdd={addTask} />}
-    {tasks.length > 0? (
-    <Tasks tasks={tasks} onDelete ={deleteTask} onToggle={togglereminder}/>
-    ):('No task to Show')}
+    <Routes><Route
+    path='/' 
+    
+     element={
+      <>
+       {showAddTask && <AddTask onAdd={addTask} />}
+       {tasks.length > 0? (
+         <Tasks 
+          tasks={tasks} 
+          onDelete ={deleteTask} 
+          onToggle={togglereminder}
+         />
+       ):('No task to Show'
+       )}
+      </>
+     } 
+       />
+       
+    <Route path='/about'  element={<About/>} /> </Routes>
+    <Footer />
     </div>
+
+    </Router>
   );
 }
 
